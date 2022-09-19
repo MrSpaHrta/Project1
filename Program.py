@@ -18,22 +18,7 @@ def __OnPageChanged(pageId : int):
 async def MainLoop():
     tasks=[]
 
-    taskCO2 = asyncio.create_task(_co2Reader.Start())
-    tasks.append(taskCO2)
-
-    taskNextion = asyncio.create_task(_nextionApp.Run())
-    tasks.append(taskNextion)
-
-    taskPrintCo2 = asyncio.create_task(PrintCo2())
-    tasks.append(taskPrintCo2)
-
-    taskDHT = asyncio.create_task(_DHTReader.ReadSensor())
-    tasks.append(taskDHT)
-
-    taskPrintDHT = asyncio.create_task(PrintDHT())
-    tasks.append(taskPrintDHT)
-
-    await asyncio.gather(tasks)
+    
 
 async def PrintCo2():
     while True:
