@@ -36,9 +36,11 @@ class DHTReader:
             except Exception as error:
                 dhtDevice.exit()
                 raise error
-            time.sleep(1.0)
+            
         
     def GetCurrentDHT(self):
+        print("Temp:", self._currentDHT[0])
+        print("Humidite:", self._currentDHT[1])
         return self._currentDHT
 
 if __name__ == '__main__':

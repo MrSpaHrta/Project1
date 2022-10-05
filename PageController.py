@@ -9,5 +9,5 @@ class PageControllerApp:
         self.PageChanged = pageChangedCallback
 
     def SwichPageTo(self, pageId : int):
-        print('zatup')
+        print(f'[PageControllerApp]: SwichPageTo({pageId})')
         self.PageChanged(pageId)
