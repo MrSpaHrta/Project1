@@ -56,22 +56,11 @@ class NextionApp:
             if(data.component_id == 1):
                 self._switchPageListener(0)
     
-    async def Run(self):
-        # try:            
-            
+    async def Run(self):                 
             print('connect...')
             await self.Client.connect()  
             print('connected!') 
-            self.Connected = True         
-                
-        # except RuntimeError as error:
-        #     print(error.args[0])
-        # except Exception as error:                
-        #     print(error.args[0])
-        #     self._client.disconnect()
-        #     raise error
-        
-        
+            self.Connected = True   
 
     async def __SendCommand(self, command):
         await self.Client.command(command)
@@ -110,9 +99,7 @@ class Writer():
         
     async def SendCO2(self,CO2):
         print(f"посылаю данне на дисплей: [CO2: {CO2}]...")
-        await self._client.set('page0.t8.txt', "%.1f" %{CO2})
-
-    
+        await self._client.set('page0.t8.txt', "%.1f" %{CO2})    
     
     async def SendTime(self):
         
@@ -131,7 +118,6 @@ class Writer():
             dateTimeData.append(now.minute)
             print(f"4") 
             dateTimeData.append(now.second)
-
             
             for i in range(len(dateTimeData)):            
                 try:                

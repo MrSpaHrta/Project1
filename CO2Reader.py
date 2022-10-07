@@ -20,8 +20,7 @@ class CO2:
         while self._isActive:
             result = mh_z19.read_all(serial_console_untouched=True)
             co2 = str(result.get('co2'))
-            self._currentCO2 = co2    
-            # print(co2)    
+            self._currentCO2 = co2              
             await asyncio.sleep(3)
     
     def Stop(self):

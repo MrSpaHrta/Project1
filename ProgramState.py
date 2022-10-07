@@ -36,27 +36,23 @@ class Page0:
     __nextionWriter = None
     __dhtReader = None
     __co2Reader = None
-    __active = False
+    __active = False    
+
     def __init__(self, appClient: NextionApp):
         self.__nextionWriter = Writer(appClient)
         self.__dhtReader = DHTReader()
-        self.__co2Reader = CO2()
+        # self.__co2Reader = CO2()
         appClient.SwichPageTo(0)
 
         
     def Enter(self):
         print(f"[Page0]: Enter()")
-        loop = asyncio.get_running_loop() # asyncio.get_event_loop()
-        print(f"[Page0]: Enter() ... 1 ...")
-        startTask = loop.create_task(self.__Start())
-        print(f"[Page0]: Enter() ... 2")
-        # startTask = asyncio.create_task(self.__Start())
-             
+        self.__active = True                  
         
-        asyncio.ensure_future(startTask)
+        asyncio.ensure_future(self.__Start()) 
 
     def Exit(self):
-        __active = False
+        self.__active = False
 
     async def __Start(self):
         print(f"[Page0]: __Start() ... 1 ...")
@@ -81,20 +77,24 @@ class Page0:
         # tasks.append(taskSendCO2)
         try:                
             print(f"[Page0]: __Start() ... 5 ...")
-            await asyncio.gather(tasks)
+            await asyncio.gather(*tasks)
             print(f"[Page0]: __Start() ... 6")
                     
         except RuntimeError as error:
             print(f"[Page0]: __Start() RuntimeError: {error.args[0]}")
         except Exception as error:                
-            print(f"[Page0]: __Start() Exception: {error.args[0]}")
+            print(f"[Page0]: __Start() Exception: {error.args[0]}")            
             
         
     async def SendDHT(self):
         while self.__active:
+            print(f"[Page0]: SendDHT() ... 1 ...")
             dht = self.__dhtReader.GetCurrentDHT()
+            print(f"[Page0]: SendDHT() ... 2 ...")
             await self.__nextionWriter.SendTemperatura(dht[0])
+            print(f"[Page0]: SendDHT() ... 3 ...")
             await self.__nextionWriter.SendHumidity(dht[1])
+            print(f"[Page0]: SendDHT() ... 4 ...")
             await asyncio.sleep(3)
 
     async def SendCO2(self):
@@ -109,7 +109,7 @@ class Page1:
         appClient.SwichPageTo(1)
 
     def Enter(self):
-        __active = True
+        self.__active = True
 
     def Exit(self):
-        __active = False   
+        self.__active = False   

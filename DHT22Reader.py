@@ -4,12 +4,12 @@ from time import sleep
 import time
 import asyncio
  
-dhtDevice = adafruit_dht.DHT22(board.D10)
 
 _loop = None
 
 class DHTReader:
 
+    _dhtDevice = None
     _currentDHT = 20, 90
     # temperature, humidity = 20, 90
 
@@ -19,28 +19,38 @@ class DHTReader:
     #     loop = asyncio.get_event_loop()
     #     sensorTask = loop.create_task(self.ReadSensor())
     #     asyncio.ensure_future(sensorTask)
-    #     loop.run_forever()        
+    #     loop.run_forever()
+
+    def __init__(self):
+        self._dhtDevice = adafruit_dht.DHT22(board.D9)       
 
     async def ReadSensor(self):
         while True:
-            await asyncio.sleep(2)
+            print(f"[DHTReader]: ReadSensor() ... 1 ...")
             try:
-                temperature = dhtDevice.temperature
-                humidity = dhtDevice.humidity
+                print(f"[DHTReader]: ReadSensor() ... 2 ...")
+                temperature = self._dhtDevice.temperature
+                print(f"[DHTReader]: ReadSensor() ... 3 ...")
+                humidity = self._dhtDevice.humidity
+                
+                print(f"[DHTReader]: ReadSensor() ... 4 ...")
                 # print("Temp: {:.1f} C Humidity: {}%".format(temperature, humidity))
                 self._currentDHT = temperature, humidity
+                print(f"[DHTReader]: ReadSensor() ... 5 ...")
+                await asyncio.sleep(5)
             except RuntimeError as error:
-                print(error.args[0])
-                time.sleep(2)
+                print(f"[DHTReader]: RuntimeError: {error.args[0]}")
+                await asyncio.sleep(1)
                 continue
             except Exception as error:
-                dhtDevice.exit()
+                print(f"[DHTReader]: Exception: {error.args[0]} --> dhtDevice.exit()")
+                self._dhtDevice.exit()
                 raise error
             
         
     def GetCurrentDHT(self):
-        print("Temp:", self._currentDHT[0])
-        print("Humidite:", self._currentDHT[1])
+        # print("Temp:", self._currentDHT[0])
+        # print("Humidite:", self._currentDHT[1])
         return self._currentDHT
 
 if __name__ == '__main__':
