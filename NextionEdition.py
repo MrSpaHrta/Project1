@@ -99,7 +99,11 @@ class Writer():
         
     async def SendCO2(self,CO2):
         print(f"посылаю данне на дисплей: [CO2: {CO2}]...")
-        await self._client.set('page0.t8.txt', "%.1f" %{CO2})    
+        await self._client.set('page0.t8.txt', "%.1f" %{CO2})
+    
+    async def SendQrCode(self, qrCode:str):
+        print(f"посылаю QR на дисплей: [QR: {qrCode}]...")
+        await self._client.set('page0.qr0.txt', qrCode)      
     
     async def SendTime(self):
         

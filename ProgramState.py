@@ -4,6 +4,7 @@ from DHT22Reader import DHTReader
 from CO2Reader import CO2
 from nextion import Nextion
 import asyncio
+import socket
 
 class Pageswicher:
 
@@ -69,7 +70,8 @@ class Page0:
         taskSendDHT = asyncio.create_task(self.SendDHT())
         tasks.append(taskSendDHT)
         print(f"[Page0]: __Start() ... 4 ...")
-
+        taskQr = asyncio.create_task(self.SendQr())
+        tasks.append(taskQr)
         # taskCO2 = asyncio.create_task(self.__co2Reader.Start())
         # tasks.append(taskCO2)
 
@@ -96,6 +98,17 @@ class Page0:
             await self.__nextionWriter.SendHumidity(dht[1])
             print(f"[Page0]: SendDHT() ... 4 ...")
             await asyncio.sleep(3)
+
+    async def SendQr(self):
+        # host = socket.getaddrinfo(socket.gethostname(), None)
+        # ipv4_addresses = [i[4][0] for i in host if i[0] == socket.AF_INET]
+        # print(f"[Page0]: SendQr() ipv4_addresses = {ipv4_addresses}")
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = f"http://{s.getsockname()[0]}:5000" 
+        print(f"[Page0]: SendQr() ip = {ip}")
+        await self.__nextionWriter.SendQrCode(ip)
 
     async def SendCO2(self):
         while self.__active:
