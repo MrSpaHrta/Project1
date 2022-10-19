@@ -1,15 +1,10 @@
-# import keyboard
 import asyncio
-from time import sleep
 import NextionEdition
 from PageController import PageControllerApp
 import ProgramState
 
 _pageControllerApp = None
 _nextionApp = None
-_co2Reader = None
-_DHTReader = None
-_nextionWriter = None
 _pageSwicher = None
 
 workEnabled = True
@@ -26,12 +21,17 @@ def __OnPageChanged(pageId : int):
     _pageSwicher.SetPage(pageId)
 
 async def MainLoop():  
+    
     await _nextionApp.Run()
-    await asyncio.sleep(1)    
+    await asyncio.sleep(1)  
+
+    
     __OnPageChanged(0)
+    print("Started")
 
 
 if __name__ == '__main__':
+    
     _pageControllerApp = PageControllerApp(__OnPageChanged)
     _nextionApp = NextionEdition.NextionApp(_pageControllerApp.SwichPageTo)
     _pageSwicher = ProgramState.Pageswicher(_nextionApp)

@@ -1,8 +1,7 @@
 import adafruit_dht
 import board
-from time import sleep
-import time
 import asyncio
+import Site.Server
  
 
 _loop = None
@@ -26,17 +25,20 @@ class DHTReader:
 
     async def ReadSensor(self):
         while True:
-            print(f"[DHTReader]: ReadSensor() ... 1 ...")
+            # print(f"[DHTReader]: ReadSensor() ... 1 ...")
             try:
-                print(f"[DHTReader]: ReadSensor() ... 2 ...")
+                # print(f"[DHTReader]: ReadSensor() ... 2 ...")
                 temperature = self._dhtDevice.temperature
-                print(f"[DHTReader]: ReadSensor() ... 3 ...")
+                temperatureFile = open('/home/pi/Documents/Project1/Data/temperature.txt', 'w')
+                temperatureFile.write(str(temperature))
+                temperatureFile.close()
+                # print(f"[DHTReader]: ReadSensor() ... 3 ...")
                 humidity = self._dhtDevice.humidity
                 
-                print(f"[DHTReader]: ReadSensor() ... 4 ...")
+                # print(f"[DHTReader]: ReadSensor() ... 4 ...")
                 # print("Temp: {:.1f} C Humidity: {}%".format(temperature, humidity))
-                self._currentDHT = temperature, humidity
-                print(f"[DHTReader]: ReadSensor() ... 5 ...")
+                self._currentDHT = temperature, humidity                
+                # print(f"[DHTReader]: ReadSensor() ... 5 ...")
                 await asyncio.sleep(5)
             except RuntimeError as error:
                 print(f"[DHTReader]: RuntimeError: {error.args[0]}")
