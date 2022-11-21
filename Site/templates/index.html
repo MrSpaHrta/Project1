@@ -3,32 +3,43 @@
     <head>
         <meta charset="UTF-8">
         <title>СИТИ ФЕРМЕРСТВО</title>
-        <!-- <script>
-            function UpdateTemperature() {
-                var request = new XMLHttpRequest();
-                var text = document.querySelector
+        <script>
+            // function UpdateTemperature() {
+            //     var request = new XMLHttpRequest();
+            //     var text = document.querySelector('#temperatureValue').nodeValue
+            //     request.open('POST', '/gettemperature')
+            // }
+            function UpdatePage() {
+                // var request = new XMLHttpRequest();
+                // var text = document.querySelector('#temperatureValue').nodeValue
+                // request.open('GET', 'index')
+                window.location.reload();
             }
-        </script> -->
+            setTimeout(UpdatePage, 3000);
+        </script>
     </head>
     <body>
         
-        <table border="0" bgcolor= "#03e96b" align="center" width="100%" cellspacing="0">
+        <table style="font-size: 200%" border="0" bgcolor= "#03e96b" align="center" width="100%" cellspacing="0">
             <tr>                
                 <td align="center" colspan="3"><h1>СИТИ ФЕРМЕРСТВО</h1>  </td>              
             </tr>
             <tr>
-                <td align="center" colspan="3"><h3>Фиров Евгений Владимирович</h3></td>                  
+                <td align="center" colspan="3"><h2>Фиров Евгений Владимирович</h2></td>                  
             </tr>           
         </table>
 
         <hr>        
             
-        <table border="1" align="left" width="50%" cellspacing="30">
+        <table style="font-size: 300%" border="1" align="center" width="70%" cellspacing="40" >
             <tr>
-                <td align="left" c >температура:</td> <td align="left" id="temperatureValue">{{temperatureValue}}</td>
+                <td align="left" >Температура:</td> <td align="left" id="temperatureValue">{{temperatureValue}}</td>
             </tr>
             <tr>
-                <td align="left">влажность:</td> <td align="left">100500</td>
+                <td align="left">Влажность:</td> <td align="left" id="humidityValue">{{humidityValue}}</td>
+            </tr>
+            <tr>
+                <td align="left">CO2:</td> <td align="left" id="co2Value">{{co2Value}}</td>
             </tr>
         </table>
 

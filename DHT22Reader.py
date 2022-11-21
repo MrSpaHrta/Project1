@@ -1,7 +1,6 @@
 import adafruit_dht
 import board
 import asyncio
-import Site.Server
  
 
 _loop = None
@@ -34,7 +33,9 @@ class DHTReader:
                 temperatureFile.close()
                 # print(f"[DHTReader]: ReadSensor() ... 3 ...")
                 humidity = self._dhtDevice.humidity
-                
+                humidityFile = open('/home/pi/Documents/Project1/Data/humidity.txt', 'w')
+                humidityFile.write(str(humidity))
+                humidityFile.close()
                 # print(f"[DHTReader]: ReadSensor() ... 4 ...")
                 # print("Temp: {:.1f} C Humidity: {}%".format(temperature, humidity))
                 self._currentDHT = temperature, humidity                

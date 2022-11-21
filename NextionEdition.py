@@ -97,9 +97,9 @@ class Writer():
         print(f"посылаю данные на дисплей: [humidity: {humidity}]...")
         await self._client.set('page0.t5.txt', "%.1f" % (humidity))
         
-    async def SendCO2(self,CO2):
+    async def SendCO2(self, CO2: str):
         print(f"посылаю данне на дисплей: [CO2: {CO2}]...")
-        await self._client.set('page0.t8.txt', "%.1f" %{CO2})
+        await self._client.set('page0.t8.txt', CO2)
     
     async def SendQrCode(self, qrCode:str):
         print(f"посылаю QR на дисплей: [QR: {qrCode}]...")
@@ -107,7 +107,8 @@ class Writer():
     
     async def SendTime(self):
         
-            print(f"send time...")
+            print(f"[Writer]: SendTime()...")
+            
             dateTimeData = []
             now = datetime.now()
             print(f"{now.year}.{now.month}.{now.day} - {now.hour}:{now.minute}:{now.second}")
