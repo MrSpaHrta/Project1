@@ -1,6 +1,6 @@
 import ADS1115
 import time
-import board
+
 
 ads = ADS1115.ADS1115()
 
@@ -18,6 +18,6 @@ while True:
     PH = int((14/5000)*volt1)
     T = int(((100/5000)*volt2)-20)
 
-    print(TDS, PH, T)
+    print(f"Mineral: {TDS}, PH: {PH}, Temperature: {T}")
     
-    time.sleep(0.1)
+    time.sleep(1)
