@@ -3,13 +3,14 @@ import RPi.GPIO as GPIO
 
 # print(RPi.GPIO.VERSION)
 # print(dir(RPi.GPIO))
-gerconMaxPin = 27
-gerconMinPin = 22
+gerconMaxPin = 16
+gerconMinPin = 16
 pumpPin = 26
 
 def Init():
     GPIO.cleanup()
     GPIO.setmode(GPIO.BCM)
+  
     GPIO.setup(pumpPin, GPIO.OUT, initial=GPIO.HIGH)
     GPIO.setup(gerconMinPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(gerconMaxPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -17,8 +18,8 @@ def Init():
 def Gercon():
     try:
         while True:
-            sleep(1)
-            if GPIO.input(gerconMinPin) == True:
+            sleep(0.1)
+            if GPIO .input(gerconMinPin) == True:
                 print("False")
                 SetPump(True)
             else:

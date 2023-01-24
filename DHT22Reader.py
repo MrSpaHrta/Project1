@@ -36,6 +36,17 @@ class DHTReader:
                 humidityFile = open('/home/pi/Documents/Project1/Data/humidity.txt', 'w')
                 humidityFile.write(str(humidity))
                 humidityFile.close()
+
+                TemperatureFile = open("/home/pi/Documents/Project1/Data/Temperature.txt", "r")
+                fff = TemperatureFile.readline()
+                TemperatureFile.close()
+                llll= fff.split(sep =",")
+                llll.append(f"{temperature}")
+                outStr = ",".join(llll)
+                TemperatureFile = open("/home/pi/Documents/Project1/Data/Temperature.txt", "w")
+                TemperatureFile.write(outStr)                
+                TemperatureFile.close()
+
                 # print(f"[DHTReader]: ReadSensor() ... 4 ...")
                 # print("Temp: {:.1f} C Humidity: {}%".format(temperature, humidity))
                 self._currentDHT = temperature, humidity                

@@ -1,6 +1,6 @@
 import asyncio
 
-class PageControllerApp:
+class PageController:
 
     PageChanged = None
     

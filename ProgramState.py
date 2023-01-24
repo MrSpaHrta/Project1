@@ -9,10 +9,10 @@ class Pageswicher:
     pageNamber = 0
     activePage = None
     
-    client = None
+    nextionClient = None
 
-    def __init__(self, appClient: NextionApp):
-        self.client = appClient
+    def __init__(self, nextionClient: NextionApp):
+        self.nextionClient = nextionClient
 
     def SetPage(self, value : int):
         print(f"[Pageswicher]: SetPage{value}")
@@ -22,10 +22,10 @@ class Pageswicher:
         
         page = None
         if (self.pageNamber == 0):
-            page = Page0(self.client)
+            page = Page0(self.nextionClient)
             
         if (self.pageNamber == 1):
-            page = Page1(self.client)
+            page = Page1(self.nextionClient)
             
 
         self.activePage = page;   
@@ -38,10 +38,15 @@ class Page0:
     __active = False    
 
     def __init__(self, appClient: NextionApp):
+        print(f"[Page0]: __init__() 0 -->")
         self.__nextionWriter = Writer(appClient)
+        print(f"[Page0]: __init__() 1...")
         self.__dhtReader = DHTReader()
+        print(f"[Page0]: __init__() 2...")
         self.__co2Reader = CO2()
-        appClient.SwichPageTo(0)
+        print(f"[Page0]: __init__() 3...")
+        appClient.SwichPageTo(1)
+        print(f"[Page0]: __init__() 4 --X")
 
         
     def Enter(self):
@@ -121,7 +126,7 @@ class Page0:
 class Page1:
     __active = False
     def __init__(self, appClient: NextionApp):        
-        appClient.SwichPageTo(1)
+        appClient.SwichPageTo(2)
 
     def Enter(self):
         self.__active = True
