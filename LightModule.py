@@ -1,5 +1,4 @@
-from NextionEdition import NextionApp, Writer
-import gpio 
+from NextionEdition import NextionApp, Writer 
 import RPi.GPIO as GPIO
 from time import sleep
 

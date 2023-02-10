@@ -9,7 +9,7 @@ _pageControllerApp = None
 _lightController =None
 _nextionApp = None
 _pageSwicher = None
-
+_rezervuar = None
 workEnabled = True
 
 # def StopProgram():
@@ -40,11 +40,8 @@ if __name__ == '__main__':
     _lightController = LightModule.LightController(__OnLightChanged)
     _nextionApp = NextionEdition.NextionApp(_pageControllerApp.SwichPageTo, _lightController.SwitchLevel)
     _pageSwicher = ProgramState.Pageswicher(_nextionApp)
-    
+    _rezervuar = Rezervuar.ReservuarController(debug=False)
     loop = asyncio.get_event_loop()
-    # for task in asyncio.all_tasks():
-    #     task.cancel()
-
     mainLoopTask = loop.create_task(MainLoop())
     asyncio.ensure_future(mainLoopTask)
     loop.run_forever()
