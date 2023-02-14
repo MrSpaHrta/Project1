@@ -1,37 +1,46 @@
 from NextionEdition import NextionApp, Writer 
 import RPi.GPIO as GPIO
 from time import sleep
+import asyncio
 
-class LightController:
-     
-    _levels = [0,1,2]
-    _lightChangedCallback = None
-    
-
-    def __init__(self, lightChangedCallback):        
-        self._lightChangedCallback = lightChangedCallback 
+class LightController: 
+    def __init__(self, lightChangedCallback, isTimeToLightingCallback):        
+        self._lightChangedCallback = lightChangedCallback
+        self._isTimeToLightingCallback = isTimeToLightingCallback
+        loop = asyncio.get_event_loop()
+        LoopTask = loop.create_task(self._Loop())
+        asyncio.ensure_future(LoopTask) 
         # GPIO.cleanup() 
         GPIO.setwarnings(False)     
         GPIO.setmode(GPIO.BCM)
         
-        for i in range(3):
-            level=LightLevel(i)
-            # level.id = i
-            self._levels[i] = level
+        self._levels = [LightLevel(0), LightLevel(1),LightLevel(2)]
+        # for i in range(3):
+        #     level=LightLevel(i)            
+        #     self._levels[i] = level
 
     def SwitchLevel(self, levelId : int):
         result = self._levels[levelId].SwitchState()        
         self._lightChangedCallback(levelId, result)
 
+    async def _Loop(self):
+        while True:
+            await asyncio.sleep(3)
+            devState = self._isTimeToLightingCallback(0)
+            for level in self._levels:
+                # level.SetState(self._isTimeToLightingCallback(level.Id))
+                level.SetState(devState)
+                
+
 class LightLevel:
-    _id=0
+    Id=0
     _pins = [17,27,22]
 
     _bisabled = True
 
     def __init__(self, id:int):        
-        self._id = id
-        GPIO.setup(self._pins[self._id], GPIO.OUT, initial=GPIO.HIGH)
+        self.Id = id
+        GPIO.setup(self._pins[self.Id], GPIO.OUT, initial=GPIO.HIGH)
         pass
 
     def SwitchState(self):
@@ -43,10 +52,15 @@ class LightLevel:
         self.SwitchRele()
         return  self._bisabled  
 
+    def SetState(self, state:bool ):
+        self._bisabled = not state
+        self.SwitchRele()
+        
+
 
     def SwitchRele(self):
         print(f'[{self}]: SwitchRele() _enabled: {self._bisabled}')
-        GPIO.output(self._pins[self._id], self._bisabled)
+        GPIO.output(self._pins[self.Id], self._bisabled)
         
 if __name__ == "__main__":
     controller = LightController(None)

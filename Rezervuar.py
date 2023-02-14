@@ -16,16 +16,16 @@ class ReservuarController:
     _gerconMax = None
     _alarmMax = False
     _alarmMin = False
+    _isTimeToWaterCallback = None
 
-
-    def __init__(self, debug:bool):
+    def __init__(self, isTimeToWaterCallback, debug:bool):
         # GPIO.cleanup()
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         # GPIO.setup(pumpPin, GPIO.OUT, initial=GPIO.HIGH)    
         self._pump = Pump(pumpPin)
         self._gerconMax = Gercon(gerconMaxPin, self._OnGerconMaxStateChanged)
-        
+        self._isTimeToWaterCallback = isTimeToWaterCallback
         loop = asyncio.get_event_loop()
         LoopTask = loop.create_task(self._Loop())
         asyncio.ensure_future(LoopTask) 
@@ -37,18 +37,21 @@ class ReservuarController:
     async def _Loop(self):
         while True:
             await asyncio.sleep(3)
+            print("========== \n Reservuar Step")
             self._gerconMax.Step()
 
             alarm = self._alarmMin or self._alarmMax
             if(alarm):            
                 # TODO disable pump, invoke Error callBack
+                print("Reservuar alarm!!!")
                 pass
             else:
-                self._pump.SetPumpState(self._IsTimeToWater())
+                # timeToWater:bool = DevIsTimeToWater()                
+                # self._pump.SetPumpState(timeToWater)
+                
+                self._pump.SetPumpState(self._isTimeToWaterCallback())
 
-    def _IsTimeToWater(self):
-        # TODO получить значение у сущности, которая следит за режимом полива
-        pass       
+         
             
 
     def _OnGerconMaxStateChanged(self, state: bool):
@@ -72,7 +75,7 @@ class Gercon:
     def Step(self):
         try:
             state = GPIO.input(self._pin)
-            print(state)
+            print(f"[Gercon] Step() state: {state}")
             self._stateChangedCallback(state)
         except KeyboardInterrupt:
             GPIO.cleanup()   
@@ -102,7 +105,15 @@ class Pump:
     def GetPumpState(self):
         return self._isActive
 
+
+# ===============
+_devTimeTOWater = True
+def DevIsTimeToWater():
+    global _devTimeTOWater
+    _devTimeTOWater = not _devTimeTOWater
+    return _devTimeTOWater
 if __name__ == "__main__":
     print("main")
-    controller = ReservuarController(True)
+    controller = ReservuarController(DevIsTimeToWater,True)
+
     

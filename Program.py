@@ -4,6 +4,7 @@ from PageModule import PageController
 import ProgramState
 import LightModule
 import Rezervuar
+import GrowingSchedule
 
 _pageControllerApp = None
 _lightController =None
@@ -37,10 +38,11 @@ async def MainLoop():
 
 if __name__ == '__main__':     
     _pageControllerApp = PageController(__OnPageChanged)
-    _lightController = LightModule.LightController(__OnLightChanged)
+    _growingController = GrowingSchedule.GrowingController()
+    _lightController = LightModule.LightController(__OnLightChanged, _growingController.IsTimeToLighting)
     _nextionApp = NextionEdition.NextionApp(_pageControllerApp.SwichPageTo, _lightController.SwitchLevel)
     _pageSwicher = ProgramState.Pageswicher(_nextionApp)
-    _rezervuar = Rezervuar.ReservuarController(debug=False)
+    _rezervuar = Rezervuar.ReservuarController(_growingController.IsTimeToWater, debug=False)
     loop = asyncio.get_event_loop()
     mainLoopTask = loop.create_task(MainLoop())
     asyncio.ensure_future(mainLoopTask)
