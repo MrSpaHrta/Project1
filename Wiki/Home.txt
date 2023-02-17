@@ -1,0 +1,8 @@
+Content-Type: text/x-zim-wiki
+Wiki-Format: zim 0.4
+Creation-Date: 2023-02-17T09:59:44+03:00
+
+====== Home ======
+Created Пятница 17 февраля 2023
+https://zim-wiki.org/
+Уррр-аааа!
