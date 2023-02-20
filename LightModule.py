@@ -30,6 +30,7 @@ class LightController:
             for level in self._levels:
                 # level.SetState(self._isTimeToLightingCallback(level.Id))
                 level.SetState(devState)
+                self._lightChangedCallback(level.Id, devState)
                 
 
 class LightLevel:

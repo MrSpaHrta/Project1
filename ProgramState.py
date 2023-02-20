@@ -23,15 +23,18 @@ class Pageswicher:
         page = None
         if (self.pageNamber == 0):
             page = Page0(self.nextionClient)
-            
+
         if (self.pageNamber == 1):
             page = Page1(self.nextionClient)
+            
+        if (self.pageNamber == 2):
+            page = Page2(self.nextionClient)
             
 
         self.activePage = page;   
         self.activePage.Enter()
 
-class Page0:
+class Page1:
     __nextionWriter = None
     __dhtReader = None
     __co2Reader = None
@@ -123,10 +126,21 @@ class Page0:
             await self.__nextionWriter.SendCO2(co2)
             await asyncio.sleep(3)
 
-class Page1:
+class Page2:
     __active = False
     def __init__(self, appClient: NextionApp):        
         appClient.SwichPageTo(2)
+
+    def Enter(self):
+        self.__active = True
+
+    def Exit(self):
+        self.__active = False   
+
+class Page0:
+    __active = False
+    def __init__(self, appClient: NextionApp):        
+        appClient.SwichPageTo(0)
 
     def Enter(self):
         self.__active = True

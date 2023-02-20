@@ -24,33 +24,33 @@ class DHTReader:
 
     async def ReadSensor(self):
         while True:
-            # print(f"[DHTReader]: ReadSensor() ... 1 ...")
+            print(f"[DHTReader]: ReadSensor() ... 1 ...")
             try:
-                # print(f"[DHTReader]: ReadSensor() ... 2 ...")
+                print(f"[DHTReader]: ReadSensor() ... 2 ...")
                 temperature = self._dhtDevice.temperature
+                print(f"[DHTReader]: ReadSensor() ... 3 ...")
                 temperatureFile = open('/home/pi/Documents/Project1/Data/temperature.txt', 'w')
                 temperatureFile.write(str(temperature))
                 temperatureFile.close()
-                # print(f"[DHTReader]: ReadSensor() ... 3 ...")
+                print(f"[DHTReader]: ReadSensor() ... 4 ...")
                 humidity = self._dhtDevice.humidity
                 humidityFile = open('/home/pi/Documents/Project1/Data/humidity.txt', 'w')
                 humidityFile.write(str(humidity))
                 humidityFile.close()
 
-                TemperatureFile = open("/home/pi/Documents/Project1/Data/Temperature.txt", "r")
+                TemperatureFile = open("/home/pi/Documents/Project1/Data/TemperatureHistory.txt", "r")
                 fff = TemperatureFile.readline()
                 TemperatureFile.close()
                 llll= fff.split(sep =",")
                 llll.append(f"{temperature}")
                 outStr = ",".join(llll)
-                TemperatureFile = open("/home/pi/Documents/Project1/Data/Temperature.txt", "w")
+                TemperatureFile = open("/home/pi/Documents/Project1/Data/TemperatureHistory.txt", "w")
                 TemperatureFile.write(outStr)                
                 TemperatureFile.close()
 
-                # print(f"[DHTReader]: ReadSensor() ... 4 ...")
+                print(f"[DHTReader]: ReadSensor() ... 5 ...")
                 # print("Temp: {:.1f} C Humidity: {}%".format(temperature, humidity))
                 self._currentDHT = temperature, humidity                
-                # print(f"[DHTReader]: ReadSensor() ... 5 ...")
                 await asyncio.sleep(5)
             except RuntimeError as error:
                 print(f"[DHTReader]: RuntimeError: {error.args[0]}")

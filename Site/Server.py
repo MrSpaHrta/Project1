@@ -18,7 +18,7 @@ def index():
     co2 = co2File.readline()
     co2File.close()
 
-    TemperatureFile = open("/home/pi/Documents/Project1/Data/Temperature.txt", "r")
+    TemperatureFile = open("/home/pi/Documents/Project1/Data/TemperatureHistory.txt", "r")
     temperatureString = TemperatureFile.readline()
     TemperatureFile.close()
     
