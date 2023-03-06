@@ -34,6 +34,12 @@ class Pageswicher:
         self.activePage = page;   
         self.activePage.Enter()
 
+    def __OnLightChanged(self, level:int, state: bool):
+        
+        if(isinstance(self.activePage, Page1)):
+            self.activePage.__OnLightChanged(level, state)
+
+
 class Page1:
     __nextionWriter = None
     __dhtReader = None
@@ -60,6 +66,8 @@ class Page1:
 
     def Exit(self):
         self.__active = False
+        self.__co2Reader.Stop()
+        self.__dhtReader.Stop()
 
     async def __Start(self):
         print(f"[Page0]: __Start() ... 1 ...")
@@ -125,6 +133,10 @@ class Page1:
             co2 = str(self.__co2Reader.GetCurrentCO2())
             await self.__nextionWriter.SendCO2(co2)
             await asyncio.sleep(3)
+
+    def __OnLightChanged(self, level:int, state: bool):
+        print("========== Call async change button state ============")        
+        asyncio.ensure_future(self.__nextionWriter.SetLightLevelButtonState(level, state))            
 
 class Page2:
     __active = False

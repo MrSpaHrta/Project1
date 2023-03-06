@@ -9,6 +9,7 @@ class DHTReader:
 
     _dhtDevice = None
     _currentDHT = 20, 90
+    _isActive = False
     # temperature, humidity = 20, 90
 
 
@@ -22,11 +23,16 @@ class DHTReader:
     def __init__(self):
         self._dhtDevice = adafruit_dht.DHT22(board.D9)       
 
+    def Stop(self):
+        self._isActive = False
+        self._dhtDevice.exit()
+
     async def ReadSensor(self):
-        while True:
+        self._isActive =True
+        while self._isActive:
             print(f"[DHTReader]: ReadSensor() ... 1 ...")
             try:
-                print(f"[DHTReader]: ReadSensor() ... 2 ...")
+                print(f"[DHTReader]: ReadSensor() ... 2 ...")                
                 temperature = self._dhtDevice.temperature
                 print(f"[DHTReader]: ReadSensor() ... 3 ...")
                 temperatureFile = open('/home/pi/Documents/Project1/Data/temperature.txt', 'w')

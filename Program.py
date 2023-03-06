@@ -8,7 +8,6 @@ import GrowingSchedule
 
 import RPi.GPIO as GPIO
 import sys
-import os
 import subprocess
 
 _pageControllerApp = None
@@ -16,20 +15,13 @@ _lightController =None
 _nextionApp = None
 _pageSwicher = None
 _rezervuar = None
-workEnabled = True
 
-# def StopProgram():
-#     workEnabled = False
-#     _nextionApp._client.disconnect()
-# keyboard.on_press_key("q", StopProgram)
 
 def __OnPageChanged(pageId : int):    
     _pageSwicher.SetPage(pageId)
 
 def __OnLightChanged(level:int, state: bool):
-    print("========== Call async change button state ============")
-    nextionWriter = NextionEdition.Writer(_nextionApp)
-    asyncio.ensure_future(nextionWriter.SetLightLevelButtonState(level, state))
+    _pageSwicher.__OnLightChanged(level, state)
     
 
 async def MainLoop():  
@@ -40,7 +32,6 @@ async def MainLoop():
 
     try:        
         subprocess.Popen('/bin/python3 /home/pi/Documents/Project1/Site/Server.py', shell=True)        
-        
     except Exception as error:
         print("Server starting ERROR!!! :" + error.args[0])    
 

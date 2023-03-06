@@ -1,4 +1,4 @@
-from NextionEdition import NextionApp, Writer 
+# from NextionEdition import NextionApp, Writer 
 import RPi.GPIO as GPIO
 from time import sleep
 import asyncio
@@ -7,6 +7,8 @@ class LightController:
     def __init__(self, lightChangedCallback, isTimeToLightingCallback):        
         self._lightChangedCallback = lightChangedCallback
         self._isTimeToLightingCallback = isTimeToLightingCallback
+        self._levels = [LightLevel(0), LightLevel(1),LightLevel(2)]
+
         loop = asyncio.get_event_loop()
         LoopTask = loop.create_task(self._Loop())
         asyncio.ensure_future(LoopTask) 
@@ -14,7 +16,6 @@ class LightController:
         GPIO.setwarnings(False)     
         GPIO.setmode(GPIO.BCM)
         
-        self._levels = [LightLevel(0), LightLevel(1),LightLevel(2)]
         # for i in range(3):
         #     level=LightLevel(i)            
         #     self._levels[i] = level
@@ -26,11 +27,11 @@ class LightController:
     async def _Loop(self):
         while True:
             await asyncio.sleep(3)
-            devState = self._isTimeToLightingCallback(0)
             for level in self._levels:
-                # level.SetState(self._isTimeToLightingCallback(level.Id))
-                level.SetState(devState)
-                self._lightChangedCallback(level.Id, devState)
+                state = self._isTimeToLightingCallback(level.Id)
+                level.SetState(state)
+                # level.SetState(devState)
+                self._lightChangedCallback(level.Id, state)
                 
 
 class LightLevel:
