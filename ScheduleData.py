@@ -1,8 +1,8 @@
-from GrowingSchedule import HousMinutes
+# from GrowingSchedule import HousMinutes
 import json
 
-class DataContainer:                                                                                                                                                                                                                                                                                    
-
+class DataContainer:                                                                                                                                                                                                                                                                                   
+    
     Week1data = {"LightLight_1_DurationMinutes": [1,2,3],
             "LightLight_1_StartHours": [11],
             "LightLight_1_StartMinutes": [29],                    
@@ -15,9 +15,9 @@ class DataContainer:
             "LightLight_3_StartHours": [11],
             "LightLight_3_StartMinutes": [29],                    
                 
-            "PumpDurations": [],
-            "PumpStartHours": [],
-            "PumpStartMinutes": []
+            "PumpDurations": [1],
+            "PumpStartHours": [10,10,10],
+            "PumpStartMinutes": [37,39,41]
     }
     Week2data = {"LightLight_1_DurationMinutes": [1,2,3],
             "LightLight_1_StartHours": [11],
@@ -31,9 +31,9 @@ class DataContainer:
             "LightLight_3_StartHours": [11],
             "LightLight_3_StartMinutes": [29],                    
                 
-            "PumpDurations": [],
-            "PumpStartHours": [],
-            "PumpStartMinutes": []
+            "PumpDurations": [1],
+            "PumpStartHours": [1],
+            "PumpStartMinutes": [1]
     }
     Week3data = {"LightLight_1_DurationMinutes": [1,2,3],
             "LightLight_1_StartHours": [11],
@@ -47,9 +47,9 @@ class DataContainer:
             "LightLight_3_StartHours": [11],
             "LightLight_3_StartMinutes": [29],                    
                 
-            "PumpDurations": [],
-            "PumpStartHours": [],
-            "PumpStartMinutes": []
+            "PumpDurations": [1],
+            "PumpStartHours": [1],
+            "PumpStartMinutes": [1]
     }
     Week4data = {"LightLight_1_DurationMinutes": [1,2,3],
             "LightLight_1_StartHours": [11],
@@ -63,9 +63,9 @@ class DataContainer:
             "LightLight_3_StartHours": [11],
             "LightLight_3_StartMinutes": [29],                    
                 
-            "PumpDurations": [],
-            "PumpStartHours": [],
-            "PumpStartMinutes": []
+            "PumpDurations": [1],
+            "PumpStartHours": [1],
+            "PumpStartMinutes": [1]
     }
 
     # LightLevel_0_startTimes = [HousMinutes(9, 51), HousMinutes(10, 55)]
@@ -84,26 +84,21 @@ class DataContainer:
                 if(item == 3):
                     json.dump(self.Week4data, write_file)   
 
-    def Load(self, week:int):
-        with open(f"Data/week_{week}_data_file.json", "r") as write_file:
-            self.data = json.load(write_file)                
+    def LoadWeek(self, week:int):
+        with open(f"Data/week_{week}_data_file.json", "r") as write_file:            
+            return json.load(write_file)  
 
+    def Load(self):
+        for item in range(4):
+            with open(f"Data/week_{item}_data_file.json", "r") as write_file:
+                if(item == 0):
+                    self.Week1data = json.load(write_file) 
 
 if __name__ == '__main__':    
     container = DataContainer()
     container.Save()   
-    import time
-    time.sleep(10)
-
-    data = {}
-    container.Load()
-
-    data = container.data
-
-    duration = data.get("LightDurationMinutes", "*")
-    duratian = data.get("level_0_StartHour",  "*")
-    duratin = data.get("level_0_StartMinute", "*")
-    print(f"data2 duration: {duration}, {duratian}, {duratin}")         
+    
+    print(f"DataContainer Saved")         
 
     
 

@@ -1,18 +1,18 @@
-replys = []
+from time import sleep
+
+replys = ["привет", "пока", "как тебя зовут?", "как дела?"]
+answers = ["Здраствуйте", "До свидание!", "Робот", "Неплохо!"]
 
 def reply(answer):
     game = True
-    if answer == "привет":
-        print("Здраствуйте")
-    elif answer == "пока":
-        print("До свидание!")
-        game = False
-    elif answer == "как тебя зовут?":
-        print("Робот")
-    elif answer == "как дела?":
-        print("Неплохо!")    
+    if answer in replys:
+        index = replys.index(answers)
+        print(answers[index])
+    elif answer == replys[-1]:
+        game = False  
     else:
         print("Не понимаю")
+        sleep(0.5)
     return game 
 
 def main():
@@ -24,3 +24,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    #==========================================================
+    # чё за херня? Где ты шарахаешься?
+    #==========================================================

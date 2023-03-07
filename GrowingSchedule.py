@@ -19,10 +19,10 @@ class SceduleItem:
     
     def __init__(self):
         self._data = ScheduleData.DataContainer()
-        week1_data = self._data.Load(1)
-        week2_data = self._data.Load(2)
-        week3_data = self._data.Load(3)
-        week4_data = self._data.Load(4)
+        week1_data = self._data.LoadWeek(1)
+        week2_data = self._data.LoadWeek(2)
+        week3_data = self._data.LoadWeek(3)
+        week4_data = self._data.LoadWeek(4)
         self._weeks = [GrowingWeek(week1_data), GrowingWeek(week2_data),GrowingWeek(week3_data),GrowingWeek(week4_data)]
         self._actualWeek = 0
 
@@ -34,7 +34,7 @@ class SceduleItem:
 
 class GrowingWeek:
     def __init__(self, data):
-        self.watering = Watering()
+        self.watering = Watering(data.get("PumpDurations"), data.get("PumpStartHours"), data.get("PumpStartMinutes"))
         self.lighting = Lighting()
         self.mixstureUnit = MixstureUnit()
 
@@ -45,13 +45,19 @@ class GrowingWeek:
         return self.lighting.IsTimeToLigghting(level)
 
 class Watering:
+    #==========================================================
+    #TODO полив я переделал. ТВОЯ задача - поправить освещение 
+    #==========================================================
 
     _devIsTimeToWater = False
 
-    def __init__(self):
-        self.durationMinutes = 1
-        self._startTimes = [HousMinutes(11, 30), HousMinutes(11, 32), HousMinutes(11, 34)]
-        self._lastStart = HousMinutes(0, 0)
+    def __init__(self, durations, startHours, startMinutes):       
+        self._startTimes = [HoursMinutes(0, 0, 0)] * len(startHours) #задаём длинну и тип данных массива
+              
+        for id in range(len(self._startTimes)):    #заполняем массив
+            self._startTimes[id] = HoursMinutes(startHours[id], startMinutes[id], durations[id])
+        
+        self._lastStart = HoursMinutes(0, 0, 0)
 
     def IsTimeToWater(self):
         # self._devIsTimeToWater = not self._devIsTimeToWater
@@ -59,13 +65,12 @@ class Watering:
         
         result = False
         now = datetime.now()
-        hour = now.hour
-        minute = now.minute
+        nowHour = now.hour
+        nowMinute = now.minute
 
-        for item in self._startTimes:
-            if(hour == item.Hour):
-                i_minute = item.Minute
-                if(i_minute <= minute and i_minute+self.durationMinutes > minute):
+        for startTime in self._startTimes:
+            if(nowHour == startTime.Hour):                
+                if(startTime.Minute <= nowMinute and startTime.Minute+startTime.Duration > nowMinute):
                     result = True
         print(f"=========\n[Watering]: IsTimeToWater() result: {result}")
         return result
@@ -73,13 +78,14 @@ class Watering:
    
 
 class Lighting:
+    #TODO полив я переделал. ТВОЯ задача - поправить освещение 
     _devIsTimeTo = False
     def __init__(self):
         self.durationMinutes = 2
 
-        self._level_0_startTimes = [HousMinutes(9, 51), HousMinutes(10, 55)]
-        self._level_1_startTimes = [HousMinutes(9, 52), HousMinutes(10, 56)]
-        self._level_2_startTimes = [HousMinutes(9, 53), HousMinutes(10, 57)] 
+        self._level_0_startTimes = [HoursMinutes(9, 51,0), HoursMinutes(10, 55,0)]
+        self._level_1_startTimes = [HoursMinutes(9, 52,0), HoursMinutes(10, 56,0)]
+        self._level_2_startTimes = [HoursMinutes(9, 53,0), HoursMinutes(10, 57,0)] 
 
     def IsTimeToLigghting(self, level:int):
         now = datetime.now()
@@ -107,9 +113,12 @@ class Lighting:
 class MixstureUnit:
     pass
 
-class HousMinutes:
+class HoursMinutes:
     Hour = 0
     Minute = 0 
-    def __init__(self, hour:int, minute:int):
+    Duration = 0
+    def __init__(self, hour:int, minute:int, duration: int):
         self.Hour = hour
         self.Minute = minute
+        self.Duration = duration #да, теперь длительность хранится здесь. Для полива переделал. 
+        
