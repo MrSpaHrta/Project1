@@ -21,7 +21,7 @@ def __OnPageChanged(pageId : int):
     _pageSwicher.SetPage(pageId)
 
 def __OnLightChanged(level:int, state: bool):
-    _pageSwicher.__OnLightChanged(level, state)
+    _pageSwicher.OnLightChanged(level, state)
     
 
 async def MainLoop():  

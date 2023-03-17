@@ -1,1 +1,56 @@
-{"LightLight_1_DurationMinutes": [1, 2, 3], "LightLight_1_StartHours": [11], "LightLight_1_StartMinutes": [29], "LightLight_2_DurationMinutes": [1, 2, 3], "LightLight_2_StartHours": [11], "LightLight_2_StartMinutes": [29], "LightLight_3_DurationMinutes": [1, 2, 3], "LightLight_3_StartHours": [11], "LightLight_3_StartMinutes": [29], "PumpDurations": [1], "PumpStartHours": [1], "PumpStartMinutes": [1]}
+{
+    "LightLight_1_DurationMinutes": [
+        1,
+        1,
+        1
+    ],
+    "LightLight_1_StartHours": [
+        1,
+        1,
+        1
+    ],
+    "LightLight_1_StartMinutes": [
+        29,
+        1,
+        1
+    ],
+    "LightLight_2_DurationMinutes": [
+        1,
+        1,
+        1
+    ],
+    "LightLight_2_StartHours": [
+        1,
+        1,
+        1
+    ],
+    "LightLight_2_StartMinutes": [
+        29,
+        1,
+        1
+    ],
+    "LightLight_3_DurationMinutes": [
+        1,
+        1,
+        1
+    ],
+    "LightLight_3_StartHours": [
+        11,
+        1,
+        1
+    ],
+    "LightLight_3_StartMinutes": [
+        29,
+        1,
+        1
+    ],
+    "PumpDurations": [
+        1
+    ],
+    "PumpStartHours": [
+        1
+    ],
+    "PumpStartMinutes": [
+        1
+    ]
+}

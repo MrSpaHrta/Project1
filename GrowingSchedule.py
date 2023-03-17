@@ -19,10 +19,10 @@ class SceduleItem:
     
     def __init__(self):
         self._data = ScheduleData.DataContainer()
-        week1_data = self._data.LoadWeek(1)
-        week2_data = self._data.LoadWeek(2)
-        week3_data = self._data.LoadWeek(3)
-        week4_data = self._data.LoadWeek(4)
+        week1_data = self._data.GetWeekData(1)
+        week2_data = self._data.GetWeekData(2)
+        week3_data = self._data.GetWeekData(3)
+        week4_data = self._data.GetWeekData(4)
         self._weeks = [GrowingWeek(week1_data), GrowingWeek(week2_data),GrowingWeek(week3_data),GrowingWeek(week4_data)]
         self._actualWeek = 0
 
@@ -35,7 +35,7 @@ class SceduleItem:
 class GrowingWeek:
     def __init__(self, data):
         self.watering = Watering(data.get("PumpDurations"), data.get("PumpStartHours"), data.get("PumpStartMinutes"))
-        self.lighting = Lighting()
+        self.lighting = Lighting(data)
         self.mixstureUnit = MixstureUnit()
 
     def IsTimeToWater(self):
@@ -44,19 +44,22 @@ class GrowingWeek:
     def IsTimeToLighting(self, level:int):
         return self.lighting.IsTimeToLigghting(level)
 
-class Watering:
-    #==========================================================
-    #TODO полив я переделал. ТВОЯ задача - поправить освещение 
-    #==========================================================
+class Watering:   
 
     _devIsTimeToWater = False
 
     def __init__(self, durations, startHours, startMinutes):       
         self._startTimes = [HoursMinutes(0, 0, 0)] * len(startHours) #задаём длинну и тип данных массива
               
-        for id in range(len(self._startTimes)):    #заполняем массив
-            self._startTimes[id] = HoursMinutes(startHours[id], startMinutes[id], durations[id])
-        
+        try:
+            for id in range(len(self._startTimes)):    #заполняем массив
+                self._startTimes[id] = HoursMinutes(startHours[id], startMinutes[id], durations[id])
+        except RuntimeError as error:
+            print(error.args[0])
+        except Exception as error:              
+            
+            print(error.args[0])
+            raise error
         self._lastStart = HoursMinutes(0, 0, 0)
 
     def IsTimeToWater(self):
@@ -80,12 +83,27 @@ class Watering:
 class Lighting:
     #TODO полив я переделал. ТВОЯ задача - поправить освещение 
     _devIsTimeTo = False
-    def __init__(self):
-        self.durationMinutes = 2
+    
+    def __init__(self, data):                
 
-        self._level_0_startTimes = [HoursMinutes(9, 51,0), HoursMinutes(10, 55,0)]
-        self._level_1_startTimes = [HoursMinutes(9, 52,0), HoursMinutes(10, 56,0)]
-        self._level_2_startTimes = [HoursMinutes(9, 53,0), HoursMinutes(10, 57,0)] 
+        self._lastStart = HoursMinutes(0, 0, 0)  
+
+        self.startHours_1 = [HoursMinutes(0, 0, 0)] * len(data.get("LightLight_1_StartHours"))
+        self.startHours_2 = [HoursMinutes(0, 0, 0)] * len(data.get("LightLight_2_StartHours"))
+        self.startHours_3 = [HoursMinutes(0, 0, 0)] * len(data.get("LightLight_3_StartHours"))
+
+        for id in range(len(self.startHours_1)):
+             self.startHours_1[id] = HoursMinutes(data.get("LightLight_1_StartHours")[id], data.get("LightLight_1_StartMinutes")[id], data.get("LightLight_1_DurationMinutes")[id])
+
+        for id in range(len(self.startHours_2)):
+             self.startHours_2[id] = HoursMinutes(data.get("LightLight_2_StartHours")[id], data.get("LightLight_2_StartMinutes")[id], data.get("LightLight_2_DurationMinutes")[id])
+
+        for id in range(len(self.startHours_3)):
+             self.startHours_3[id] = HoursMinutes(data.get("LightLight_3_StartHours")[id], data.get("LightLight_3_StartMinutes")[id], data.get("LightLight_3_DurationMinutes")[id])        
+
+        # self._level_0_startTimes = HoursMinutes(data.get("LightLight_1_StartHours"), data.get("LightLight_1_StartMinutes"), data.get("LightLight_1_DurationMinutes"))
+        # self._level_1_startTimes = HoursMinutes(data.get("LightLight_2_StartHours"), data.get("LightLight_2_StartMinutes"), data.get("LightLight_2_DurationMinutes"))
+        # self._level_2_startTimes = HoursMinutes(data.get("LightLight_3_StartHours"), data.get("LightLight_3_StartMinutes"), data.get("LightLight_3_DurationMinutes"))
 
     def IsTimeToLigghting(self, level:int):
         now = datetime.now()
@@ -94,19 +112,28 @@ class Lighting:
 
         result = False
         
-        if(level == 0):
-            levelTimes = self._level_0_startTimes
-        elif(level == 1):
-            levelTimes = self._level_1_startTimes
-        elif(level == 2):
-            levelTimes = self._level_2_startTimes        
+        levelTimes = [HoursMinutes(0, 0, 0) ]
         
+        if(level == 0):
+            levelTimes = self.startHours_1
+        elif(level == 1):
+            levelTimes = self.startHours_2
+        elif(level == 2):
+            levelTimes = self.startHours_3  
+
         for item in levelTimes:
-            if(hour == item.Hour):  
+            if(hour == item.Hour):                
                 startMinute = item.Minute
-                stopMinute = item.Minute+self.durationMinutes             
+                stopMinute = item.Minute+item.Duration            
                 if(startMinute <= minute and stopMinute > minute):
                     result = True
+        
+        # for item in levelTimes:
+        #     if(hour == item.Hour):  
+        #         startMinute = item.Minute
+        #         stopMinute = item.Minute+self.durationMinutes             
+        #         if(startMinute <= minute and stopMinute > minute):
+        #             result = True
         print(f"=========\n[Ligghting]: IsTimeToLigghting({level}) : {result}") 
         return result 
 

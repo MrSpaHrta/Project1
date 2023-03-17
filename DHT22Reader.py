@@ -9,17 +9,8 @@ class DHTReader:
 
     _dhtDevice = None
     _currentDHT = 20, 90
-    _isActive = False
-    # temperature, humidity = 20, 90
-
-
-    # def Start(self):
-    #     print('')
-    #     loop = asyncio.get_event_loop()
-    #     sensorTask = loop.create_task(self.ReadSensor())
-    #     asyncio.ensure_future(sensorTask)
-    #     loop.run_forever()
-
+    _isActive = False 
+    
     def __init__(self):
         self._dhtDevice = adafruit_dht.DHT22(board.D9)       
 
@@ -27,7 +18,7 @@ class DHTReader:
         self._isActive = False
         self._dhtDevice.exit()
 
-    async def ReadSensor(self):
+    async def Start(self):
         self._isActive =True
         while self._isActive:
             print(f"[DHTReader]: ReadSensor() ... 1 ...")
@@ -77,6 +68,6 @@ if __name__ == '__main__':
     print('main')
     testDHTReader = DHTReader() 
     loop = asyncio.get_event_loop()
-    sensorTask = loop.create_task(testDHTReader.ReadSensor())
+    sensorTask = loop.create_task(testDHTReader.Start())
     asyncio.ensure_future(sensorTask)
     loop.run_forever()
