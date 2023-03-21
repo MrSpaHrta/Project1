@@ -25,15 +25,16 @@ def __OnLightChanged(level:int, state: bool):
     
 
 async def MainLoop():  
+    try:        
+        subprocess.Popen('/bin/python3 /home/pi/Documents/Project1/Site/Server.py', shell=True)        
+    except Exception as error:
+        print("Server starting ERROR!!! :" + error.args[0]) 
+           
     await _nextionApp.Run()
     await asyncio.sleep(1)     
     __OnPageChanged(1)
     print("Program Started")
 
-    try:        
-        subprocess.Popen('/bin/python3 /home/pi/Documents/Project1/Site/Server.py', shell=True)        
-    except Exception as error:
-        print("Server starting ERROR!!! :" + error.args[0])    
 
 def Exit():
     GPIO.cleanup()

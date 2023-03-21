@@ -88,6 +88,7 @@ class Pump:
     def __init__(self, pin:int):
         GPIO.setup(pin, GPIO.OUT, initial=GPIO.HIGH) 
         self._pin = pin
+        
 
     def SetPumpState(self, active:bool):
         self._isActive = active
