@@ -68,6 +68,7 @@ if __name__ == '__main__':
     print('main')
     testDHTReader = DHTReader() 
     loop = asyncio.get_event_loop()
-    sensorTask = loop.create_task(testDHTReader.Start())
+    # sensorTask = loop.create_task(testDHTReader.Start())
+    sensorTask = asyncio.create_task(testDHTReader.Start())
     asyncio.ensure_future(sensorTask)
     loop.run_forever()
