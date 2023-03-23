@@ -18,7 +18,7 @@ def index():
     co2 = co2File.readline()
     co2File.close()
 
-    TemperatureFile = open("/home/pi/Documents/Project1/Data/Temperature.txt", "r")
+    TemperatureFile = open("/home/pi/Documents/Project1/Data/TemperatureHistory.txt", "r")
     temperatureString = TemperatureFile.readline()
     TemperatureFile.close()
     
@@ -26,7 +26,11 @@ def index():
 
 @app.route("/aaaa")
 def aaaa():
-    pass
+    from ScheduleData import DataContainer 
+    mapData = DataContainer()
+    data = mapData.GetWeekData(1)
+    return {data.get("Co2Max")}
+
 
 def Start(): 
     app.run(host = "0.0.0.0", port=5000, debug=True)     

@@ -1,0 +1,67 @@
+{
+    "LightLight_1_DurationMinutes": [
+        1,
+        1,
+        1
+    ],
+    "LightLight_1_StartHours": [
+        12,
+        12,
+        12
+    ],
+    "LightLight_1_StartMinutes": [
+        25,
+        28,
+        31
+    ],
+    "LightLight_2_DurationMinutes": [
+        1,
+        1,
+        1
+    ],
+    "LightLight_2_StartHours": [
+        12,
+        12,
+        12
+    ],
+    "LightLight_2_StartMinutes": [
+        25,
+        28,
+        31
+    ],
+    "LightLight_3_DurationMinutes": [
+        1,
+        1,
+        1
+    ],
+    "LightLight_3_StartHours": [
+        12,
+        12,
+        12
+    ],
+    "LightLight_3_StartMinutes": [
+        25,
+        28,
+        31
+    ],
+    "PumpDurations": [
+        1,
+        1,
+        1
+    ],
+    "PumpStartHours": [
+        12,
+        10,
+        10
+    ],
+    "PumpStartMinutes": [
+        37,
+        39,
+        41
+    ],
+    "TemperatureMin": 19,
+    "TemperatureMax": 22,
+    "HunidityMin": 50,
+    "HunidityMax": 90,
+    "Co2Max": 800
+}

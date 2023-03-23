@@ -1,6 +1,8 @@
+
 from datetime import datetime
 from nextion import Nextion, EventType
 import asyncio
+# import RPi.GPIO as GPIO
 
 _nextionApp = None
 c = 0
@@ -15,8 +17,9 @@ class NextionApp:
     serial0_url = '/dev/serial0'
     # serial_url = '/dev/ttyS0'
 
-    def __init__(self, switchPageListener, switchLightListener):
+    def __init__(self, switchPageListener, switchLightListener, exitCallback):
         
+        self._exitCallback = exitCallback
         if(switchPageListener == None):
             self._switchPageListener = self.SwichPageTo
         else:
@@ -32,12 +35,15 @@ class NextionApp:
         command = f"page {pageId}"
 
         try:
-            asyncio.ensure_future(self.__SendCommand(command))          
+            exit = (pageId == 0)
+            asyncio.ensure_future(self.__SendCommand(command, exit))
+            
+                        
                 
         except RuntimeError as error:
             print(error.args[0])
         except Exception as error:                
-            self._client.disconnect()
+            self.Client.disconnect()
             print(error.args[0])
             raise error
         
@@ -52,11 +58,11 @@ class NextionApp:
 
         if(data.page_id == 1):
             if(data.component_id == 8):
-                self._switchPageListener(1)
+                self._switchPageListener(2)
 
         if(data.page_id ==2):
             if(data.component_id == 1):
-                self._switchPageListener(0)
+                self._switchPageListener(1)
 
 
         # 2=3й этаж, 1=2й этаж, 0=1й этаж
@@ -71,6 +77,11 @@ class NextionApp:
         if(data.page_id == 1):
             if(data.component_id == 27):
                 self._switchLightListener(0)
+
+        if(data.page_id == 1):
+            if(data.component_id == 30):
+                self._switchPageListener(0)
+                    
     
     async def Run(self):                 
             print('connect...')
@@ -78,8 +89,11 @@ class NextionApp:
             print('connected!') 
             self.Connected = True   
 
-    async def __SendCommand(self, command):
+    async def __SendCommand(self, command, exit:bool ):
         await self.Client.command(command)
+        if(exit):
+            await self.Client.disconnect()
+            self._exitCallback()   
         
 
 
@@ -157,9 +171,9 @@ class Writer():
             await self._client.set(f'page0.b_light{level}.txt', text)       
                     
         except RuntimeError as error:
-            print(error.args[0])
+            print("RuntimeError: "+error.args[0])
         except Exception as error:                
-            print(error.args[0])
+            print("Exception: "+error.args[0])
             raise error
 
         
