@@ -29,6 +29,10 @@ class Pageswicher:
             
         if (self.pageNamber == 2):
             page = Page2(self.nextionClient)
+        # if (self.pageNamber == 3):
+        #     page = Page3(self.nextionClient)
+        if (self.pageNamber == 4):
+            page = Page4(self.nextionClient)
             
 
         self.activePage = page;   
@@ -39,8 +43,18 @@ class Pageswicher:
         if(isinstance(self.activePage, Page1)):
             self.activePage.OnLightChanged(level, state)
 
+class Page0: #page_off
+    __active = False
+    def __init__(self, appClient: NextionApp):        
+        appClient.SwichPageTo(0)
 
-class Page1:
+    def Enter(self):
+        self.__active = True
+
+    def Exit(self):
+        self.__active = False   
+
+class Page1: #page_main
     __nextionWriter = None
     __dhtReader = None
     __co2Reader = None
@@ -64,7 +78,7 @@ class Page1:
         self.__dhtReader.Stop()
 
     async def __Start(self):
-        await self.__nextionWriter.SendTime()
+        # await self.__nextionWriter.SendTime()
         
         tasks=[]
           
@@ -84,14 +98,15 @@ class Page1:
             await asyncio.gather(*tasks)
                     
         except RuntimeError as error:
-            print(f"[Page0]: __Start() RuntimeError: {error.args[0]}")
+            print(f"[Page1]: __Start() RuntimeError: {error.args[0]}")
         except Exception as error:                
-            print(f"[Page0]: __Start() Exception: {error.args[0]}")            
+            print(f"[Page1]: __Start() Exception: {error.args[0]}")            
             
         
     async def SendDHT(self):
         while self.__active:
             dht = self.__dhtReader.GetCurrentDHT()
+            print(f"[Page1]: SendDHT() dht = {dht[0]}; {dht[1]}")
             if(dht != None):
                 if(dht[0] != None):
                     await self.__nextionWriter.SendTemperatura(dht[0])
@@ -108,12 +123,13 @@ class Page1:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         ip = f"http://{s.getsockname()[0]}:5000" 
-        print(f"[Page0]: SendQr() ip = {ip}")
+        print(f"[Page1]: SendQr() ip = {ip}")
         await self.__nextionWriter.SendQrCode(ip)
 
     async def SendCO2(self):
         while self.__active:
             co2 = str(self.__co2Reader.GetCurrentCO2())
+            print(f"[Page1]: SendCO2() co2 = {co2}")
             await self.__nextionWriter.SendCO2(co2)
             await asyncio.sleep(3)
 
@@ -121,7 +137,7 @@ class Page1:
         print("========== Call async change button state ============")        
         asyncio.ensure_future(self.__nextionWriter.SetLightLevelButtonState(level, state))            
 
-class Page2:
+class Page2: #page_settings
     __active = False
     def __init__(self, appClient: NextionApp):        
         appClient.SwichPageTo(2)
@@ -130,15 +146,78 @@ class Page2:
         self.__active = True
 
     def Exit(self):
-        self.__active = False   
+        self.__active = False  
 
-class Page0:
+class Page3: #page_handle
     __active = False
     def __init__(self, appClient: NextionApp):        
-        appClient.SwichPageTo(0)
+        appClient.SwichPageTo(2)
 
     def Enter(self):
         self.__active = True
 
     def Exit(self):
-        self.__active = False   
+        self.__active = False  
+
+
+class Page4: #page_graf
+    
+    __nextionWriter = None
+    __dhtReader = None
+    
+    __active = False    
+
+    def __init__(self, appClient: NextionApp):
+        
+        self.__nextionWriter = Writer(appClient)        
+        self.__dhtReader = DHTReader()        
+                
+        appClient.SwichPageTo(4)        
+
+        
+    def Enter(self):        
+        self.__active = True        
+        asyncio.ensure_future(self.__Start()) 
+
+    def Exit(self):
+        self.__active = False
+        
+        self.__dhtReader.Stop()
+
+    async def __Start(self):
+        # while self.__active:
+        print("Page 4 Active...")
+        #     await asyncio.sleep(2)
+        
+        tasks=[]          
+        
+        taskDHT = asyncio.create_task(self.__dhtReader.Start())
+        tasks.append(taskDHT)
+        taskSendGrafPoints = asyncio.create_task(self.SendTemperatureGrafPoints())
+        tasks.append(taskSendGrafPoints)  
+        
+        try:                
+            await asyncio.gather(*tasks)
+                    
+        except RuntimeError as error:
+            print(f"[Page4]: __Start() RuntimeError: {error.args[0]}")
+        except Exception as error:                
+            print(f"[Page4]: __Start() Exception: {error.args[0]}")            
+            
+        
+    async def SendTemperatureGrafPoints(self):
+        await asyncio.sleep(1)  
+        
+        while self.__active:
+            print("Page 4 SendGrafPoint...")
+            dht = self.__dhtReader.GetCurrentDHT()
+            # if(dht != None):
+            #     if(dht[0] != None):
+            try: 
+                await self.__nextionWriter.SendTempereGrafPoint(dht[0])
+            except Exception as error:                
+                print(f"[Page4]: __Start() SendTemperatureGrafPoints: {error.args[0]}") 
+            
+            await asyncio.sleep(1)    
+
+    

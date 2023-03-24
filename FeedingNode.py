@@ -24,11 +24,12 @@ while True:
     # TDS = int((4400/5000)*volt1)
     k = 0.68
 
-    TDS_0 = int(k*volt0)
-    TDS_1 = int(k*volt1)
-    PH = int((14/5000)*volt2)
-    # T = int(((24/5000)*volt3))
-    T = int(((100/5000)*volt3))
+    EC_0 = int(4400/5000*volt0)
+    TDS_1 = int(2000/5000*volt1)
+    
+    PH = ((14/5000)*volt2)
+    T = int(((24/5000)*volt3))
+    
     temps.append(T)
 
     averageTemp = 0
@@ -38,7 +39,7 @@ while True:
 
     averageTemp = summT/ len(temps)   
 
-    print(f"TDS_0: {TDS_0}, TDS_1: {TDS_1}, PH: {PH}, Temperature: {T}")
+    print(f"EC: {EC_0}, TDS: {TDS_1}, PH: {PH}, Temperature: {T}")
     # print(f"volt0: {volt0}, volt1: {volt1}, volt2: {volt2}, volt3: {volt3}")
     
     time.sleep(3)

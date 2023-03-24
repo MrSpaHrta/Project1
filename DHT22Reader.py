@@ -21,15 +21,15 @@ class DHTReader:
     async def Start(self):
         self._isActive =True
         while self._isActive:
-            print(f"[DHTReader]: ReadSensor() ... 1 ...")
+            print(f"[DHTReader]: ReadSensor() ... ")
             try:
-                print(f"[DHTReader]: ReadSensor() ... 2 ...")                
+                # print(f"[DHTReader]: ReadSensor() ... 2 ...")                
                 temperature = self._dhtDevice.temperature
-                print(f"[DHTReader]: ReadSensor() ... 3 ...")
+                # print(f"[DHTReader]: ReadSensor() ... 3 ...")
                 temperatureFile = open('/home/pi/Documents/Project1/Data/temperature.txt', 'w')
                 temperatureFile.write(str(temperature))
                 temperatureFile.close()
-                print(f"[DHTReader]: ReadSensor() ... 4 ...")
+                # print(f"[DHTReader]: ReadSensor() ... 4 ...")
                 humidity = self._dhtDevice.humidity
                 humidityFile = open('/home/pi/Documents/Project1/Data/humidity.txt', 'w')
                 humidityFile.write(str(humidity))
@@ -45,7 +45,7 @@ class DHTReader:
                 TemperatureFile.write(outStr)                
                 TemperatureFile.close()
 
-                print(f"[DHTReader]: ReadSensor() ... 5 ...")
+                # print(f"[DHTReader]: ReadSensor() ... 5 ...")
                 # print("Temp: {:.1f} C Humidity: {}%".format(temperature, humidity))
                 self._currentDHT = temperature, humidity                
                 await asyncio.sleep(5)
@@ -62,7 +62,10 @@ class DHTReader:
     def GetCurrentDHT(self):
         # print("Temp:", self._currentDHT[0])
         # print("Humidite:", self._currentDHT[1])
-        return self._currentDHT
+        if(self._currentDHT == None):
+            return [0,0]
+        else:
+            return self._currentDHT
 
 if __name__ == '__main__':
     print('main')

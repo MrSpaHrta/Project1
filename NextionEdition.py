@@ -2,6 +2,8 @@
 from datetime import datetime
 from nextion import Nextion, EventType
 import asyncio
+
+from NextionData import Page_1, Page_2, Page_3, Page_4
 # import RPi.GPIO as GPIO
 
 _nextionApp = None
@@ -56,31 +58,37 @@ class NextionApp:
         elif type_ == EventType.TOUCH:
             print('A button (id: %d) was touched on page %d' % (data.component_id, data.page_id))
 
-        if(data.page_id == 1):
-            if(data.component_id == 8):
+        if(data.page_id == 1):            
+            if(data.component_id == Page_1.settingsButtonID):
                 self._switchPageListener(2)
+            if(data.component_id == Page_1.handleButtonID):
+                self._switchPageListener(3)        
+            if(data.component_id == Page_1.grafikButtonID):
+                self._switchPageListener(4)
 
         if(data.page_id ==2):
-            if(data.component_id == 1):
+            if(data.component_id == Page_2.backButtonID):
+                self._switchPageListener(1)
+        if(data.page_id ==3):
+            if(data.component_id == Page_3.backButtonID):
+                self._switchPageListener(1)
+        if(data.page_id ==4):
+            if(data.component_id == Page_4.backButtonID):
                 self._switchPageListener(1)
 
 
-        # 2=3й этаж, 1=2й этаж, 0=1й этаж
-        if(data.page_id == 1):
-            if(data.component_id == 25):
-                self._switchLightListener(2)
+        
+        if(data.page_id == 3):
+            if(data.component_id == Page_3.lightButtonID):
+                pass # self._switchLightListener(2) #переключить свет
 
-        if(data.page_id == 1):
-            if(data.component_id == 26):
-                self._switchLightListener(1)
+        if(data.page_id == 3):
+            if(data.component_id == Page_3.pumpButtonID):
+                pass #переключить насос        
 
-        if(data.page_id == 1):
-            if(data.component_id == 27):
-                self._switchLightListener(0)
-
-        if(data.page_id == 1):
-            if(data.component_id == 30):
-                self._switchPageListener(0)
+        if(data.page_id == 2):
+            if(data.component_id == Page_2.exitButtonID):
+                self._switchPageListener(0) #выключаем программу
                     
     
     async def Run(self):                 
@@ -101,8 +109,8 @@ if __name__ == '__main__':
     _nextionApp = NextionApp(None, None)
     
     loop = asyncio.get_event_loop()
-    sensorTask = loop.create_task(_nextionApp.Run())
-    asyncio.ensure_future(sensorTask)
+    task = loop.create_task(_nextionApp.Run())
+    asyncio.ensure_future(task)
     loop.run_forever()
 
 class Writer():
@@ -113,19 +121,25 @@ class Writer():
 
     async def SendTemperatura(self, temperature):
         print(f"посылаю данные на дисплей: [temperature: {temperature}]...")
-        await self._client.set('page0.t4.txt', "%.1f" % (temperature))
+        await self._client.set('page_main.airT.txt', "%.1f" % (temperature))
+
+    async def SendTempereGrafPoint(self, temperature):
+        print(f"Send Tempere Graf Point: [temperature: {(temperature)}]...")
+        # await self._client.set('page0.t4.txt', "%.1f" % (temperature))
+        await self._client.command(f'add {2},0,{int(temperature*10)}')
+        await self._client.set('page_graf.s0.txt')
 
     async def SendHumidity(self,humidity):
         print(f"посылаю данные на дисплей: [humidity: {humidity}]...")
-        await self._client.set('page0.t5.txt', "%.1f" % (humidity))
+        await self._client.set('page_main.airH.txt', "%.1f" % (humidity))
         
     async def SendCO2(self, CO2: str):
         print(f"посылаю данне на дисплей: [CO2: {CO2}]...")
-        await self._client.set('page0.t6.txt', CO2)
+        await self._client.set('page_main.airCO.txt', CO2)
     
     async def SendQrCode(self, qrCode:str):
         print(f"посылаю QR на дисплей: [QR: {qrCode}]...")
-        await self._client.set('page0.qr0.tL1xt', qrCode)      
+        await self._client.set('page_main.qr0.txt', qrCode)      
     
     async def SendTime(self):
         
@@ -159,22 +173,23 @@ class Writer():
                     raise error
 
     async def SetLightLevelButtonState(self, level: int, state: bool):
-        print(f"меняю состояние кнопок на дисплее: [level: {level}: state: {state}]...")
-        # await self._client.set(f'page0.b_light{level}.val', state) 
-        text = ""
-        if(state == True):
-            text = "On"
-        else:
-            text = "Off"
+        await asyncio.sleep(10)
+        # print(f"меняю состояние кнопок на дисплее: [level: {level}: state: {state}]...")
+        # # await self._client.set(f'page0.b_light{level}.val', state) 
+        # text = ""
+        # if(state == True):
+        #     text = "On"
+        # else:
+        #     text = "Off"
         
-        try:                
-            await self._client.set(f'page0.b_light{level}.txt', text)       
+        # try:                
+        #     await self._client.set(f'page0.b_light{level}.txt', text)       
                     
-        except RuntimeError as error:
-            print("RuntimeError: "+error.args[0])
-        except Exception as error:                
-            print("Exception: "+error.args[0])
-            raise error
+        # except RuntimeError as error:
+        #     print("RuntimeError: "+error.args[0])
+        # except Exception as error:                
+        #     print("Exception: "+error.args[0])
+        #     raise error
 
         
 
