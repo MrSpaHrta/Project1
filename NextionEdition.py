@@ -3,7 +3,7 @@ from datetime import datetime
 from nextion import Nextion, EventType
 import asyncio
 
-from NextionData import Page_1, Page_2, Page_3, Page_4
+import NextionData as IDs
 # import RPi.GPIO as GPIO
 
 _nextionApp = None
@@ -59,35 +59,35 @@ class NextionApp:
             print('A button (id: %d) was touched on page %d' % (data.component_id, data.page_id))
 
         if(data.page_id == 1):            
-            if(data.component_id == Page_1.settingsButtonID):
+            if(data.component_id == IDs.P1_settingsButtonID):
                 self._switchPageListener(2)
-            if(data.component_id == Page_1.handleButtonID):
+            if(data.component_id == IDs.P1_handleButtonID):
                 self._switchPageListener(3)        
-            if(data.component_id == Page_1.grafikButtonID):
+            if(data.component_id == IDs.P1_grafikButtonID):
                 self._switchPageListener(4)
 
         if(data.page_id ==2):
-            if(data.component_id == Page_2.backButtonID):
+            if(data.component_id == IDs.P2_backButtonID):
                 self._switchPageListener(1)
         if(data.page_id ==3):
-            if(data.component_id == Page_3.backButtonID):
+            if(data.component_id == IDs.P3_backButtonID):
                 self._switchPageListener(1)
         if(data.page_id ==4):
-            if(data.component_id == Page_4.backButtonID):
-                self._switchPageListener(1)
+            if(data.component_id == IDs.P4_backButtonID):
+                self._switchPageListener(1)               
 
 
         
         if(data.page_id == 3):
-            if(data.component_id == Page_3.lightButtonID):
+            if(data.component_id == IDs.P3_lightButtonID):
                 pass # self._switchLightListener(2) #переключить свет
 
         if(data.page_id == 3):
-            if(data.component_id == Page_3.pumpButtonID):
+            if(data.component_id == IDs.P3_pumpButtonID):
                 pass #переключить насос        
 
         if(data.page_id == 2):
-            if(data.component_id == Page_2.exitButtonID):
+            if(data.component_id == IDs.P2_exitButtonID):
                 self._switchPageListener(0) #выключаем программу
                     
     

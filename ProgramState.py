@@ -29,8 +29,8 @@ class Pageswicher:
             
         if (self.pageNamber == 2):
             page = Page2(self.nextionClient)
-        # if (self.pageNamber == 3):
-        #     page = Page3(self.nextionClient)
+        if (self.pageNamber == 3):
+            page = Page3(self.nextionClient)
         if (self.pageNamber == 4):
             page = Page4(self.nextionClient)
             
@@ -151,7 +151,7 @@ class Page2: #page_settings
 class Page3: #page_handle
     __active = False
     def __init__(self, appClient: NextionApp):        
-        appClient.SwichPageTo(2)
+        appClient.SwichPageTo(3)
 
     def Enter(self):
         self.__active = True

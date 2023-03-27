@@ -3,24 +3,17 @@ import json
 
 class DataContainer:  
 # технологическая карта                                                                                                                                                                                                                                                                                 
-    _growingWeekNomber = 0
+    
+    _day = 1
 
 
-    Week1data = {"LightLight_1_DurationMinutes": [1,1,1],
-            "LightLight_1_StartHours": [12,12,12],
-            "LightLight_1_StartMinutes": [25,28,31],                    
+    Week1data = {"LightLight_1_DurationMinutes": 1,
+            "LightLight_StartHour": 12,
+            "LightLight_StartMinute": 20, 
                 
-            "LightLight_2_DurationMinutes": [1,1,1],
-            "LightLight_2_StartHours": [12,12,12],
-            "LightLight_2_StartMinutes": [25,28,31],                    
-                
-            "LightLight_3_DurationMinutes": [1,1,1],
-            "LightLight_3_StartHours": [12,12,12],
-            "LightLight_3_StartMinutes": [25,28,31],                    
-                
-            "PumpDurations": [1,1,1],
-            "PumpStartHours": [12,10,10],
-            "PumpStartMinutes": [37,39,41],
+            "PumpDuration": 1,
+            "PumpStartHours": 12,
+            "PumpStartMinutes": 21,
 
             "TemperatureMin": 19,
             "TemperatureMax": 22,
@@ -28,64 +21,54 @@ class DataContainer:
             "HunidityMax": 90,
 
             "Co2Max": 800
-
-
-
-
-    }
-    Week2data = {"LightLight_1_DurationMinutes": [1,1,1],
-            "LightLight_1_StartHours": [1,1,1],
-            "LightLight_1_StartMinutes": [29,1,1],                    
-                
-            "LightLight_2_DurationMinutes": [1,1,1],
-            "LightLight_2_StartHours": [1,1,1],
-            "LightLight_2_StartMinutes": [29,1,1],                    
-                
-            "LightLight_3_DurationMinutes": [1,2,3],
-            "LightLight_3_StartHours": [1,1,1],
-            "LightLight_3_StartMinutes": [29,1,1],                    
-                
-            "PumpDurations": [1,1,1],
-            "PumpStartHours": [1,1,1],
-            "PumpStartMinutes": [1,1,1]
-    }
-    Week3data = {"LightLight_1_DurationMinutes": [1,1,1],
-            "LightLight_1_StartHours": [1,1,1],
-            "LightLight_1_StartMinutes": [29,1,1],                    
-                
-            "LightLight_2_DurationMinutes": [1,1,1],
-            "LightLight_2_StartHours": [1,1,1],
-            "LightLight_2_StartMinutes": [29,11,1],                    
-                
-            "LightLight_3_DurationMinutes": [1,1,1],
-            "LightLight_3_StartHours": [1,1,1],
-            "LightLight_3_StartMinutes": [29,1,1],                    
-                
-            "PumpDurations": [1],
-            "PumpStartHours": [1],
-            "PumpStartMinutes": [1]
-    }
-    Week4data = {
-            "LightLight_1_DurationMinutes": [1,1,1],
-            "LightLight_1_StartHours": [1,1,1],
-            "LightLight_1_StartMinutes": [29,1,1],                    
-                
-            "LightLight_2_DurationMinutes": [1,1,1],
-            "LightLight_2_StartHours": [1,1,1],
-            "LightLight_2_StartMinutes": [29,1,1],                    
-                
-            "LightLight_3_DurationMinutes": [1,1,1],
-            "LightLight_3_StartHours": [11,1,1],
-            "LightLight_3_StartMinutes": [29,1,1],                    
-                
-            "PumpDurations": [1],
-            "PumpStartHours": [1],
-            "PumpStartMinutes": [1]
     }
 
-    # LightLevel_0_startTimes = [HousMinutes(9, 51), HousMinutes(10, 55)]
-    # LightLevel_1_startTimes = [HousMinutes(9, 52), HousMinutes(10, 56)]
-    # LightLevel_2_startTimes = [HousMinutes(9, 53), HousMinutes(10, 57)] 
+    Week2data = {"LightLight_1_DurationMinutes": 1,
+            "LightLight_StartHour": 12,
+            "LightLight_StartMinute": 20, 
+                
+            "PumpDuration": 1,
+            "PumpStartHours": 12,
+            "PumpStartMinutes": 21,
+
+            "TemperatureMin": 19,
+            "TemperatureMax": 22,
+            "HunidityMin": 50,
+            "HunidityMax": 90,
+
+            "Co2Max": 800
+    }
+    Week3data = {"LightLight_1_DurationMinutes": 1,
+            "LightLight_StartHour": 12,
+            "LightLight_StartMinute": 20, 
+                
+            "PumpDuration": 1,
+            "PumpStartHours": 12,
+            "PumpStartMinutes": 21,
+
+            "TemperatureMin": 19,
+            "TemperatureMax": 22,
+            "HunidityMin": 50,
+            "HunidityMax": 90,
+
+            "Co2Max": 800
+    }
+    Week4data = {"LightLight_1_DurationMinutes": 1,
+            "LightLight_StartHour": 12,
+            "LightLight_StartMinute": 20, 
+                
+            "PumpDuration": 1,
+            "PumpStartHours": 12,
+            "PumpStartMinutes": 21,
+
+            "TemperatureMin": 19,
+            "TemperatureMax": 22,
+            "HunidityMin": 50,
+            "HunidityMax": 90,
+
+            "Co2Max": 800
+    }
+    
 
     def Save(self):       
         for item in range(4):
@@ -108,6 +91,9 @@ class DataContainer:
 
     def GetWeekNomber(self):
         return self._growingWeekNomber
+
+    def GetDayNomber(self):
+        return self._day
 
     def Load(self):
         for item in range(4):
